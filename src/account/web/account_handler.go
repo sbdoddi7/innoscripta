@@ -19,14 +19,29 @@ func NewAccountHandler(svc model.AccountService) *accountHandler {
 
 func (ah *accountHandler) CreateAccount(c *gin.Context) {
 	// parse JSON etc.
-	err := ah.svc.CreateAccount()
+
+	var req model.CreateAccountReq
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{"message": "invalid request"},
+		)
+	}
+
+	accounNumber, err := ah.svc.CreateAccount(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error"})
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "CreateAccount not implemented"})
+	c.JSON(http.StatusCreated, gin.H{"message": "CreateAccount Success!", "account_number": accounNumber})
 }
 
 func (ah *accountHandler) GetAccount(c *gin.Context) {
 	id := c.Param("id")
-	c.JSON(http.StatusOK, gin.H{"account_id": id, "message": "GetAccount not implemented"})
+
+	account, err := ah.svc.GetAccount(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error"})
+	}
+	c.JSON(http.StatusOK, account)
 }

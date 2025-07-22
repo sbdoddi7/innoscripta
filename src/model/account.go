@@ -4,18 +4,24 @@ import "time"
 
 type Account struct {
 	ID        string    `json:"id" db:"id"`
-	OwnerName string    `json:"owner_name" db:"owner_name"`
+	FirstName string    `json:"first_name" db:"first_name"`
+	LastName  string    `json:"last_name" db:"last_name"`
 	Balance   float64   `json:"balance" db:"balance"`
-	Currency  string    `json:"currency" db:"currency"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }
 
+type CreateAccountReq struct {
+	FirstName string  `json:"first_name"`
+	LastName  string  `json:"last_name"`
+	Balance   float64 `json:"balance"`
+}
+
 type AccountService interface {
-	CreateAccount() error
-	GetAccount() (Account, error)
+	CreateAccount(req CreateAccountReq) (int64, error)
+	GetAccount(id string) (Account, error)
 }
 
 type AccountRepository interface {
-	CreateAccount() error
-	GetAccount() (Account, error)
+	CreateAccount(req CreateAccountReq) (int64, error)
+	GetAccount(id string) (Account, error)
 }

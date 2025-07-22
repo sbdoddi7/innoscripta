@@ -1,0 +1,7 @@
+**/.git
+**/vendor
+**/*.log
+*.md
+.DS_Store
+.idea
+.vscode
