@@ -3,22 +3,20 @@ package database
 import (
 	"database/sql"
 	"log"
-	"sync"
+
+	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
 )
 
-var postgressDb *sql.DB
-var once sync.Once
-
-func NewPostgressDb(dsn string) (*sql.DB, error) {
-	var err error
-	once.Do(func() {
-		postgressDb, err = sql.Open("postgress", dsn)
-	})
-
+func NewPostgresDB() *sql.DB {
+	dsn := viper.GetString("POSTGRES_DSN")
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
-		log.Printf("Failed to connect to DB: %v", err)
-		return nil, err
+		log.Fatalf("Failed to open Postgres: %v", err)
 	}
-
-	return postgressDb, nil
+	if err = db.Ping(); err != nil {
+		log.Fatalf("Failed to ping Postgres: %v", err)
+	}
+	log.Println("Connected to Postgres")
+	return db
 }

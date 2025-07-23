@@ -1,14 +1,15 @@
 package main
 
 import (
-	"log"
 	"os"
 
+	logger "github.com/sbdoddi7/innoscripta/src/platform/log"
 	"github.com/sbdoddi7/innoscripta/src/routes"
 )
 
 func main() {
-	// init DB, queue, envs etc (skipped)
+	logger.Init()
+	logger.Logger.Info("Innoscripta bank app starting...")
 
 	router := routes.NewRouter()
 
@@ -17,8 +18,9 @@ func main() {
 		port = "8080"
 	}
 
-	log.Printf("Server started at :%s", port)
+	logger.Logger.Infof("Server started at :%s", port)
+
 	if err := router.Run(":" + port); err != nil {
-		log.Fatal(err)
+		logger.Logger.Fatal(err)
 	}
 }
