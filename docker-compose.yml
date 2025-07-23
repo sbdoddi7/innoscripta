@@ -7,9 +7,15 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
+      - mongo
+      - rabbitmq
     environment:
       - PORT=8080
       - POSTGRES_DSN=postgres://sbdoddi:password@postgres:5432/innoscripta?sslmode=disable
+      - MONGO_URI=mongodb://mongo:27017
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    volumes:
+      - ./.env:/root/.env:ro
 
   postgres:
     image: postgres:15
@@ -24,5 +30,21 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
+  mongo:
+    image: mongo:6
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "5672:5672"     # AMQP
+      - "15672:15672"   # Management UI
+
 volumes:
   postgres-data:
+  mongo-data:

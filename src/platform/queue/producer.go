@@ -5,6 +5,8 @@ import (
 
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/sbdoddi7/innoscripta/src/model"
+	logger "github.com/sbdoddi7/innoscripta/src/platform/log"
+	"github.com/sirupsen/logrus"
 )
 
 type TransactionProducer interface {
@@ -21,6 +23,11 @@ func NewTransactionProducer(ch *amqp091.Channel, queueName string) TransactionPr
 }
 
 func (p *transactionProducer) Publish(msg model.TransactionMessage) error {
+	logger.Logger.WithFields(logrus.Fields{
+		"account_number": msg.AccountNumber,
+		"amount":         msg.Amount,
+		"type":           msg.Type,
+	}).Info("Publishing transaction event")
 	body, _ := json.Marshal(msg)
 	return p.channel.Publish(
 		"", p.queueName, false, false,

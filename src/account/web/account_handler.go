@@ -23,6 +23,7 @@ func (ah *accountHandler) CreateAccount(c *gin.Context) {
 	var req model.CreateAccountReq
 
 	if err := c.ShouldBindJSON(&req); err != nil {
+
 		c.JSON(
 			http.StatusBadRequest,
 			gin.H{"message": "invalid request"},

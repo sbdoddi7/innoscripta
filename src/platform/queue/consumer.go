@@ -6,6 +6,8 @@ import (
 
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/sbdoddi7/innoscripta/src/model"
+	logger "github.com/sbdoddi7/innoscripta/src/platform/log"
+	"github.com/sirupsen/logrus"
 )
 
 func StartConsumer(ch *amqp091.Channel, queueName string, svc model.TransactionService) {
@@ -17,6 +19,11 @@ func StartConsumer(ch *amqp091.Channel, queueName string, svc model.TransactionS
 				log.Printf("bad message: %v", err)
 				continue
 			}
+			logger.Logger.WithFields(logrus.Fields{
+				"account_number": msg.AccountNumber,
+				"amount":         msg.Amount,
+				"type":           msg.Type,
+			}).Info("Processing transaction event")
 			if err := svc.ProcessTransaction(msg); err != nil {
 				log.Printf("process error: %v", err)
 			}

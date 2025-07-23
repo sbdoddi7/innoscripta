@@ -26,7 +26,7 @@ func NewRouter() *gin.Engine {
 	accountSvc := accSvc.NewAccountService(accountRepo)
 	accountWeb := accWeb.NewAccountHandler(accountSvc)
 
-	transactionRepo := txRepo.NewTransactionRepository(mongoClient, "ledger", "transaction_logs")
+	transactionRepo := txRepo.NewTransactionRepository(mongoClient, "ledger", "transaction_logs", postgressDb)
 	prod := queue.NewTransactionProducer(rabbitCh, queueName)
 	transactionSvc := txSvc.NewTransactionService(prod, transactionRepo)
 	transactionWeb := txWeb.NewTransactionHandler(transactionSvc)

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/sbdoddi7/innoscripta/src/model"
@@ -12,11 +13,13 @@ import (
 
 type transactionRepository struct {
 	collection *mongo.Collection
+	db         *sql.DB
 }
 
-func NewTransactionRepository(client *mongo.Client, dbName, collectionName string) *transactionRepository {
+func NewTransactionRepository(client *mongo.Client, dbName, collectionName string, db *sql.DB) *transactionRepository {
 	return &transactionRepository{
 		collection: client.Database(dbName).Collection(collectionName),
+		db:         db,
 	}
 }
 
@@ -24,6 +27,16 @@ func (r *transactionRepository) WriteLog(log model.TransactionLog) error {
 	log.Timestamp = time.Now()
 	_, err := r.collection.InsertOne(context.TODO(), log)
 
+	return err
+}
+
+func (r *transactionRepository) UpdateBalance(accountNumber int64, delta float64) error {
+	query := `
+	    UPDATE accounts
+	    SET balance = balance + $1
+	    WHERE account_number = $2
+	`
+	_, err := r.db.Exec(query, delta, accountNumber)
 	return err
 }
 
