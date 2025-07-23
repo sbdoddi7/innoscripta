@@ -1,21 +1,24 @@
-FROM golang:1.21-alpine AS builder
+# syntax=docker/dockerfile:1
+
+# Build stage
+FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
-# copy go.mod & download deps first for cache
+# Copy go mod files and download deps
 COPY go.mod go.sum ./
 RUN go mod download
 
-# copy source
+# Copy the whole source code
 COPY ./src ./src
 
-# build
-RUN cd src && go build -o /innoscripta-cs
+# Build
+WORKDIR /app/src/cmd
+RUN go build -o /innoscripta-cs
 
 # Final stage
 FROM alpine:3.18
 
-# copy binary
 COPY --from=builder /innoscripta-cs /innoscripta-cs
 
 EXPOSE 8080
