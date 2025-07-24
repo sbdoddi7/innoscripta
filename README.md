@@ -35,15 +35,27 @@ All built with **Go (Gin framework)**, **PostgreSQL**, **MongoDB**, and **Rabbit
 > All data is processed asynchronously for performance & reliability.
 
 
-### 🐳 **Spin up with Docker Compose**
+## 🚀 Getting Started
 
-Git Clone: git clone https://github.com/sbdoddi7/innoscripta.git
-From project root:
-go mod tidy
-docker-compose up --build
+### Clone the repository
+```bash
+git clone https://github.com/sbdoddi7/innoscripta.git
+cd innoscripta
+
+- go mod tidy
+- docker-compose up --build
 
 
 Mock Generate: 
 - mockgen -source=src/model/account.go  -destination=src/account/mocks/account_mock.go -package=mocks
 
 - mockgen -source=src/model/transaction.go  -destination=src/transaction/mocks/account_mock.go -package=mocks
+
+Notes
+- Unit tests are not yet fully covered for all service, repository, and handler methods due to time constraints.
+
+Potential Enhancements
+- Request validation using go-playground/validator
+- Improved error handling & logging
+- Auto‑generate API documentation for consumers & front‑end.
+- Graceful retry / DLQ for RabbitMQ consumer
