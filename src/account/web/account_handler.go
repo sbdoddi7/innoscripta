@@ -2,6 +2,7 @@ package web
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sbdoddi7/innoscripta/src/model"
@@ -32,11 +33,13 @@ func (ah *accountHandler) CreateAccount(c *gin.Context) {
 			http.StatusBadRequest,
 			gin.H{"message": "invalid request"},
 		)
+		return
 	}
 
 	accounNumber, err := ah.svc.CreateAccount(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error"})
+		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"message": "CreateAccount Success!", "account_number": accounNumber})
 }
@@ -46,8 +49,13 @@ func (ah *accountHandler) CreateAccount(c *gin.Context) {
 // Method: GET /accounts/:id
 func (ah *accountHandler) GetAccount(c *gin.Context) {
 	id := c.Param("id")
+	accountNumber, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid account number"})
+		return
+	}
 
-	account, err := ah.svc.GetAccount(id)
+	account, err := ah.svc.GetAccount(accountNumber)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error"})
 	}

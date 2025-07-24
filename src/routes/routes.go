@@ -1,23 +1,22 @@
 package routes
 
 import (
+	"database/sql"
+
 	"github.com/gin-gonic/gin"
 	accRepo "github.com/sbdoddi7/innoscripta/src/account/repository"
 	accSvc "github.com/sbdoddi7/innoscripta/src/account/service"
 	accWeb "github.com/sbdoddi7/innoscripta/src/account/web"
-	"github.com/sbdoddi7/innoscripta/src/platform/database"
 	"github.com/sbdoddi7/innoscripta/src/platform/queue"
 	txRepo "github.com/sbdoddi7/innoscripta/src/transaction/repository"
 	txSvc "github.com/sbdoddi7/innoscripta/src/transaction/service"
 	txWeb "github.com/sbdoddi7/innoscripta/src/transaction/web"
+	"github.com/streadway/amqp"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func NewRouter() *gin.Engine {
+func NewRouter(postgressDb *sql.DB, mongoClient *mongo.Client, rabbitCh *amqp.Channel) *gin.Engine {
 	r := gin.Default()
-
-	postgressDb := database.NewPostgresDB()
-	mongoClient := database.NewMongoClient()
-	rabbitCh := queue.NewRabbitMQChannel()
 
 	queueName := "transactions"
 	rabbitCh.QueueDeclare(queueName, true, false, false, false, nil)

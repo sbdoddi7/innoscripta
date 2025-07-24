@@ -42,7 +42,7 @@ func (th *transactionHandler) CreateTransaction(c *gin.Context) {
 // Method: GET /accounts/:id/transactions
 // Query parameters: page, limit
 func (th *transactionHandler) GetTransactions(c *gin.Context) {
-	accountNumberStr := c.Param("account_number")
+	accountNumberStr := c.Param("id")
 	pageStr := c.DefaultQuery("page", "1")
 	limitStr := c.DefaultQuery("limit", "10")
 

@@ -37,7 +37,7 @@ func (ar *accountRepository) CreateAccount(req model.CreateAccountReq) (int64, e
 }
 
 // GetAccount fetches account details with provided account number from database.
-func (ar *accountRepository) GetAccount(id string) (model.Account, error) {
+func (ar *accountRepository) GetAccount(id int64) (model.Account, error) {
 	stmt, err := ar.db.Prepare(queryGetAccountByNumber)
 	if err != nil {
 		return model.Account{}, fmt.Errorf("prepare failed: %w", err)
@@ -46,7 +46,13 @@ func (ar *accountRepository) GetAccount(id string) (model.Account, error) {
 
 	var account model.Account
 
-	err = stmt.QueryRow(queryGetAccountByNumber).Scan(&account)
+	err = stmt.QueryRow(id).Scan(
+		&account.ID,
+		&account.FirstName,
+		&account.LastName,
+		&account.Balance,
+		&account.CreatedAt,
+	)
 	if err != nil {
 		return model.Account{}, fmt.Errorf("query account failed: %w", err)
 	}

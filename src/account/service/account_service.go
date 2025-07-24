@@ -25,8 +25,7 @@ func (as *accountService) CreateAccount(req model.CreateAccountReq) (int64, erro
 }
 
 // GetAccount handles business logic for fetching account details
-func (as *accountService) GetAccount(id string) (model.Account, error) {
-	// DB logic
+func (as *accountService) GetAccount(id int64) (model.Account, error) {
 	account, err := as.repo.GetAccount(id)
 	if err != nil {
 		return model.Account{}, err

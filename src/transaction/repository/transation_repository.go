@@ -31,14 +31,37 @@ func (r *transactionRepository) WriteLog(log model.TransactionLog) error {
 	return err
 }
 
-// UpdateBalance updates the balance of an account by adding delta amount.
+// UpdateBalance safely updates the balance by delta, ensuring ACID consistency.
 func (r *transactionRepository) UpdateBalance(accountNumber int64, delta float64) error {
-	query := `
-	    UPDATE accounts
-	    SET balance = balance + $1
-	    WHERE account_number = $2
-	`
-	_, err := r.db.Exec(query, delta, accountNumber)
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Rollback in case of failure
+	defer func() {
+		if p := recover(); p != nil {
+			tx.Rollback()
+			panic(p)
+		} else if err != nil {
+			tx.Rollback()
+		} else {
+			err = tx.Commit()
+		}
+	}()
+
+	var currentBalance float64
+	err = tx.QueryRow(`SELECT balance FROM accounts WHERE account_number = $1 FOR UPDATE`, accountNumber).
+		Scan(&currentBalance)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(`UPDATE accounts SET balance = balance + $1 WHERE account_number = $2`, delta, accountNumber)
+	if err != nil {
+		return err
+	}
+
 	return err
 }
 

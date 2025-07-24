@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/rabbitmq/amqp091-go"
 	"github.com/sbdoddi7/innoscripta/src/model"
 	logger "github.com/sbdoddi7/innoscripta/src/platform/log"
 	"github.com/sirupsen/logrus"
+	"github.com/streadway/amqp"
 )
 
-func StartConsumer(ch *amqp091.Channel, queueName string, svc model.TransactionService) {
+func StartConsumer(ch *amqp.Channel, queueName string, svc model.TransactionService) {
 	msgs, _ := ch.Consume(queueName, "", true, false, false, false, nil)
 	go func() {
 		for d := range msgs {

@@ -41,3 +41,9 @@ Git Clone: git clone https://github.com/sbdoddi7/innoscripta.git
 From project root:
 go mod tidy
 docker-compose up --build
+
+
+Mock Generate: 
+- mockgen -source=src/model/account.go  -destination=src/account/mocks/account_mock.go -package=mocks
+
+- mockgen -source=src/model/transaction.go  -destination=src/transaction/mocks/account_mock.go -package=mocks

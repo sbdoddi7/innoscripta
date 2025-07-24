@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Account struct {
-	ID        string    `json:"id" db:"id"`
+	ID        int       `json:"id" db:"id"`
 	FirstName string    `json:"first_name" db:"first_name"`
 	LastName  string    `json:"last_name" db:"last_name"`
 	Balance   float64   `json:"balance" db:"balance"`
@@ -18,10 +18,10 @@ type CreateAccountReq struct {
 
 type AccountService interface {
 	CreateAccount(req CreateAccountReq) (int64, error)
-	GetAccount(id string) (Account, error)
+	GetAccount(id int64) (Account, error)
 }
 
 type AccountRepository interface {
 	CreateAccount(req CreateAccountReq) (int64, error)
-	GetAccount(id string) (Account, error)
+	GetAccount(id int64) (Account, error)
 }
