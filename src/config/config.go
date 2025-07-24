@@ -11,6 +11,7 @@ type Config struct {
 	PostgresDSN string
 }
 
+// LoadConfig retrices variables from envirnoment
 func LoadConfig() *Config {
 	viper.SetDefault("PORT", "8080")
 	viper.AutomaticEnv()

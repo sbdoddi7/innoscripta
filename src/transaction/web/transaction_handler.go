@@ -17,6 +17,9 @@ func NewTransactionHandler(s model.TransactionService) *transactionHandler {
 	return &transactionHandler{service: s}
 }
 
+// CreateTransaction is a Gin handler that enqueues a deposit or withdrawal transaction.
+//
+// Method: POST /transactions
 func (th *transactionHandler) CreateTransaction(c *gin.Context) {
 	var req model.CreateTransactionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -33,6 +36,11 @@ func (th *transactionHandler) CreateTransaction(c *gin.Context) {
 	c.JSON(http.StatusAccepted, gin.H{"transaction_id": txID, "status": "queued"})
 }
 
+// GetTransactions is a Gin handler that retrieves paginated transaction logs
+// for a given account number.
+//
+// Method: GET /accounts/:id/transactions
+// Query parameters: page, limit
 func (th *transactionHandler) GetTransactions(c *gin.Context) {
 	accountNumberStr := c.Param("account_number")
 	pageStr := c.DefaultQuery("page", "1")

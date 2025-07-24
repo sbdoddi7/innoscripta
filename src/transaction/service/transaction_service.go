@@ -18,6 +18,7 @@ func NewTransactionService(p queue.TransactionProducer, repo model.TransactionRe
 	return &transactionService{producer: p, repo: repo}
 }
 
+// CreateTransaction publishes the transaction event to the RabbiMQ
 func (ts *transactionService) CreateTransaction(accountNumber int64, amount float64, txType string) (string, error) {
 	txID := uuid.NewString()
 	msg := model.TransactionMessage{
@@ -29,7 +30,8 @@ func (ts *transactionService) CreateTransaction(accountNumber int64, amount floa
 	return txID, ts.producer.Publish(msg)
 }
 
-// consumer calls this
+// ProcessTransaction processes a deposit or withdrawal transaction.
+// It updates the account balance in Postgres and logs the transaction in MongoDB.
 func (ts *transactionService) ProcessTransaction(msg model.TransactionMessage) error {
 	logger.Logger.WithFields(logrus.Fields{
 		"account_number": msg.AccountNumber,
@@ -53,6 +55,7 @@ func (ts *transactionService) ProcessTransaction(msg model.TransactionMessage) e
 	return ts.repo.WriteLog(msg.ToTransactionLog())
 }
 
+// GetTransactions handles fetch transactions and pagination
 func (ts *transactionService) GetTransactions(accountNumber int64, page, limit int64) ([]model.TransactionLog, error) {
 	logger.Logger.WithFields(logrus.Fields{
 		"account_number": accountNumber,

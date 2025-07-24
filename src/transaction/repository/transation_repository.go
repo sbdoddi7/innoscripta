@@ -23,6 +23,7 @@ func NewTransactionRepository(client *mongo.Client, dbName, collectionName strin
 	}
 }
 
+// WriteLog inserts a new transaction log into MongoDB.
 func (r *transactionRepository) WriteLog(log model.TransactionLog) error {
 	log.Timestamp = time.Now()
 	_, err := r.collection.InsertOne(context.TODO(), log)
@@ -30,6 +31,7 @@ func (r *transactionRepository) WriteLog(log model.TransactionLog) error {
 	return err
 }
 
+// UpdateBalance updates the balance of an account by adding delta amount.
 func (r *transactionRepository) UpdateBalance(accountNumber int64, delta float64) error {
 	query := `
 	    UPDATE accounts
@@ -40,6 +42,7 @@ func (r *transactionRepository) UpdateBalance(accountNumber int64, delta float64
 	return err
 }
 
+// GetTransactions fetches all transaction from database by account number
 func (r *transactionRepository) GetTransactions(accountNumber int64, limit, offset int64) ([]model.TransactionLog, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

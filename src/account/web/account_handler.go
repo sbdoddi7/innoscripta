@@ -17,6 +17,10 @@ func NewAccountHandler(svc model.AccountService) *accountHandler {
 	}
 }
 
+// CreateAccount is a Gin handler that parses the JSON request to create a new account.
+// It calls the service layer and returns the new account number as JSON.
+//
+// Method: POST /accounts
 func (ah *accountHandler) CreateAccount(c *gin.Context) {
 	// parse JSON etc.
 
@@ -37,6 +41,9 @@ func (ah *accountHandler) CreateAccount(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "CreateAccount Success!", "account_number": accounNumber})
 }
 
+// GetAccount is a Gin handler to fetch account details by account number.
+//
+// Method: GET /accounts/:id
 func (ah *accountHandler) GetAccount(c *gin.Context) {
 	id := c.Param("id")
 

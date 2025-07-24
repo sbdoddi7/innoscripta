@@ -1,4 +1,4 @@
-#  Innoscripta Banking Ledger Service
+#  Innoscripta Banking Service
 
 This project is a **Golang backend service** for managing bank accounts and transactions.  
 It supports:
@@ -37,5 +37,7 @@ All built with **Go (Gin framework)**, **PostgreSQL**, **MongoDB**, and **Rabbit
 
 ### 🐳 **Spin up with Docker Compose**
 
+Git Clone: git clone https://github.com/sbdoddi7/innoscripta.git
 From project root:
+go mod tidy
 docker-compose up --build

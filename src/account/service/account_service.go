@@ -14,15 +14,17 @@ func NewAccountService(repo model.AccountRepository) *accountService {
 	}
 }
 
+// CreateAccount handles business logic for creating a new account.
+// calls the repository to insert the account.
 func (as *accountService) CreateAccount(req model.CreateAccountReq) (int64, error) {
 	accountNumber, err := as.repo.CreateAccount(req)
 	if err != nil {
 		return 0, err
 	}
-	// DB logic
 	return accountNumber, nil
 }
 
+// GetAccount handles business logic for fetching account details
 func (as *accountService) GetAccount(id string) (model.Account, error) {
 	// DB logic
 	account, err := as.repo.GetAccount(id)
