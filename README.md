@@ -59,3 +59,5 @@ Potential Enhancements
 - Improved error handling & logging
 - Auto‑generate API documentation for consumers & front‑end.
 - Graceful retry / DLQ for RabbitMQ consumer
+
+- PostMan Collection Link: https://www.postman.com/soma-502420/innoscripata-cs/collection/t27j01n/api-s?action=share&source=copy-link&creator=43671109

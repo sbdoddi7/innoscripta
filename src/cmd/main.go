@@ -47,7 +47,6 @@ func main() {
 	// Setup router with dependencies
 	router := routes.NewRouter(postgresDB, mongoClient, rabbitCh)
 
-	// Read port from env (default 8080)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -69,7 +68,6 @@ func main() {
 	<-quit
 	logger.Logger.Warn("Shutting down gracefully...")
 
-	// Optional: sleep or cleanup
 	time.Sleep(2 * time.Second)
 
 	logger.Logger.Info("Server stopped")

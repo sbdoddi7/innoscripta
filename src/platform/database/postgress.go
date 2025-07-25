@@ -15,7 +15,7 @@ func NewPostgresDB() (*sql.DB, error) {
 	var db *sql.DB
 	var err error
 
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		db, err = sql.Open("postgres", dsn)
 		if err == nil {
 			err = db.Ping()
@@ -26,6 +26,7 @@ func NewPostgresDB() (*sql.DB, error) {
 		}
 
 		log.Printf("Postgres not ready yet (%v). Retrying in 3s...", err)
+		// back-off retry after 3 seconds
 		time.Sleep(3 * time.Second)
 	}
 

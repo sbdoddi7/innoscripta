@@ -15,7 +15,7 @@ func NewRabbitMQChannel() (*amqp.Channel, *amqp.Connection, error) {
 	var ch *amqp.Channel
 	var err error
 
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		conn, err = amqp.Dial(rabbitURL)
 		if err == nil {
 			ch, err = conn.Channel()
@@ -23,7 +23,6 @@ func NewRabbitMQChannel() (*amqp.Channel, *amqp.Connection, error) {
 				log.Println("Connected to RabbitMQ and opened channel!")
 				return ch, conn, nil
 			}
-			// if channel fails, close connection and retry
 			conn.Close()
 		}
 		log.Printf("RabbitMQ not ready yet (%v). Retrying in 3s...", err)
